@@ -17,3 +17,16 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+    
+# restaurants/models.py
+
+class Comment(models.Model):
+    # 댓글 내용 
+    comment = models.CharField(max_length=200) 
+    # 작성일 (자동 생성) 
+    date = models.DateTimeField(auto_now_add=True) 
+    # 어떤 맛집 게시글에 달린 댓글인지 연결 (외래키) 
+    article = models.ForeignKey('Restaurant', on_delete=models.CASCADE, related_name='comments') 
+
+    def __str__(self):
+        return self.comment 

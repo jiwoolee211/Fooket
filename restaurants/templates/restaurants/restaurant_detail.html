@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card mb-4 shadow-sm border-0">
+        {% if restaurant.image %}
+        <img src="{{ restaurant.image.url }}" class="card-img-top" alt="{{ restaurant.name }}"
+            style="height: 400px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <span class="badge bg-info text-white mb-2">{{ restaurant.category }}</span>
+                    <h1 class="card-title fw-bold">{{ restaurant.name }}</h1>
+                    <p class="text-muted"><i class="bi bi-geo-alt"></i> {{ restaurant.location }}</p>
+                </div>
+
+                <div class="btn-group shadow-sm">
+                    <a href="{% url 'restaurant_update' restaurant.id %}" class="btn btn-sm btn-outline-warning">정보
+                        수정</a>
+
+                    <form action="{% url 'restaurant_delete' restaurant.id %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('이 맛집 정보와 모든 댓글이 영구 삭제됩니다. 정말 삭제하시겠습니까?')">
+                            맛집 삭제
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <p class="card-text fs-5">{{ restaurant.description }}</p>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-body p-4">
+            <h4 class="fw-bold mb-3"> 💬댓글 남기기💬</h4>
+            <form method="POST" action="{% url 'create_comment' restaurant.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ comment_form.as_p }}
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary px-4">댓글 작성</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-body p-4">
+            <h4 class="fw-bold mb-3">등록된 댓글 ({{ restaurant.comments.count }})</h4>
+            <hr>
+            {% for comment in restaurant.comments.all %}
+            <div class="mb-3 d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="mb-1 fs-5">{{ comment.comment }}</p>
+                    <small class="text-muted">{{ comment.date|date:"Y-m-d H:i" }}</small>
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'update_comment' restaurant.id comment.id %}"
+                        class="btn btn-sm btn-outline-warning">수정</a>
+
+                    <form action="{% url 'delete_comment' restaurant.id comment.id %}" method="POST"
+                        style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('정말 이 댓글을 삭제하시겠습니까?')">삭제</button>
+                    </form>
+                </div>
+            </div>
+            {% if not forloop.last %}
+            <hr>{% endif %}
+            {% empty %}
+            <p class="text-muted py-3 text-center">아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mt-4 mb-5 text-center">
+        <a href="{% url 'restaurant_list' %}" class="btn btn-secondary px-4">목록으로 돌아가기</a>
+    </div>
+</div>
+{% endblock %}

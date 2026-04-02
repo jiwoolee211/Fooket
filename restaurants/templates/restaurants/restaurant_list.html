@@ -11,15 +11,10 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container px-lg-5">
             <a class="navbar-brand" href="{% url 'home' %}">지우의 맛집기록</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
@@ -32,12 +27,10 @@
     </nav>
 
     <header class="py-5 bg-light border-bottom mb-5">
-        <div class="container px-lg-5">
-            <div class="text-center">
-                <h1 class="display-5 fw-bold">내가 다녀온 맛집들 📍</h1>
-                <p class="fs-4 text-muted">직접 먹어보고 기록하는 맛집 리스트입니다.</p>
-                <a class="btn btn-primary btn-lg shadow-sm" href="{% url 'restaurant_create' %}">새 맛집 등록하기</a>
-            </div>
+        <div class="container px-lg-5 text-center">
+            <h1 class="display-5 fw-bold">내가 다녀온 맛집들 📍</h1>
+            <p class="fs-4 text-muted">직접 먹어보고 기록하는 맛집 리스트입니다.</p>
+            <a class="btn btn-primary btn-lg shadow-sm" href="{% url 'restaurant_create' %}">새 맛집 등록하기</a>
         </div>
     </header>
 
@@ -47,29 +40,30 @@
                 {% for res in restaurants %}
                 <div class="col">
                     <div class="card h-100 shadow-sm border-0 overflow-hidden">
-                        
                         {% if res.image %}
-                            <img src="{{ res.image.url }}" class="card-img-top" alt="{{ res.name }}" style="height: 200px; object-fit: cover;">
+                        <img src="{{ res.image.url }}" class="card-img-top" alt="{{ res.name }}"
+                            style="height: 200px; object-fit: cover;">
                         {% else %}
-                            <div class="bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
-                                <i class="bi bi-shop fs-1 opacity-50"></i>
-                            </div>
+                        <div class="bg-secondary d-flex align-items-center justify-content-center text-white"
+                            style="height: 200px;">
+                            <i class="bi bi-shop fs-1 opacity-50"></i>
+                        </div>
                         {% endif %}
 
                         <div class="card-body p-4">
                             <span class="badge bg-info text-dark mb-2">{{ res.category }}</span>
-                            
-                            <h2 class="card-title fs-4 fw-bold mb-1">{{ res.name }}</h2>
-                            <p class="text-muted small mb-3">
-                                <i class="bi bi-geo-alt"></i> {{ res.location }}
-                            </p>
-                            
+                            <a href="{% url 'restaurant_detail' res.id %}" class="text-decoration-none text-dark">
+                                <h2 class="card-title fs-4 fw-bold mb-2">{{ res.name }}</h2>
+                            </a>
+                            <p class="text-muted small mb-3"><i class="bi bi-geo-alt"></i> {{ res.location }}</p>
                             <p class="card-text mb-4" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 3rem;">
                                 {{ res.description }}
                             </p>
-
-                            <div class="d-grid gap-2">
-                                <a href="{% url 'review_create' %}" class="btn btn-outline-primary rounded-pill btn-sm">리뷰 남기기</a>
+                            <div class="d-grid gap-2 mt-auto pt-3">
+                                <a href="{% url 'review_create' %}" class="btn rounded-pill btn-sm fw-bold shadow-sm"
+                                    style="background-color: #98b6e4; border: none; color: white;">리뷰 남기기</a>
+                                <a href="{% url 'restaurant_detail' res.id %}" class="btn rounded-pill btn-sm fw-bold shadow-sm"
+                                    style="background-color: #96c7f0; border: none; color: white;">댓글 & 상세보기</a>
                             </div>
                         </div>
                     </div>
@@ -77,10 +71,46 @@
                 {% empty %}
                 <div class="col-12 text-center py-5">
                     <i class="bi bi-search display-1 text-muted"></i>
-                    <p class="fs-4 text-muted mt-3">아직 등록된 맛집이 없습니다. 첫 번째 맛집을 추가해보세요!</p>
+                    <p class="fs-4 text-muted mt-3">아직 등록된 맛집이 없습니다.</p>
                 </div>
                 {% endfor %}
-            </div>
+            </div> <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if restaurants.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link shadow-sm" href="?page={{ restaurants.previous_page_number }}"
+                            style="color: #ff6b6b; border-radius: 10px 0 0 10px;">이전</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" style="border-radius: 10px 0 0 10px;">이전</span>
+                    </li>
+                    {% endif %}
+
+                    {% for num in restaurants.paginator.page_range %}
+                        {% if restaurants.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link" style="background-color: #ff6b6b; border-color: #ff6b6b;">{{ num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}" style="color: #ff6b6b;">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if restaurants.has_next %}
+                    <li class="page-item">
+                        <a class="page-link shadow-sm" href="?page={{ restaurants.next_page_number }}"
+                            style="color: #ff6b6b; border-radius: 0 10px 10px 0;">다음</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" style="border-radius: 0 10px 10px 0;">다음</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     </section>
 
@@ -89,8 +119,6 @@
             <p class="m-0 text-center text-white">Copyright &copy; Jiwoo Matzip 2026</p>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

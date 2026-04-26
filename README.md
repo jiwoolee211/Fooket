@@ -1,7 +1,29 @@
 # 📍 나만의 맛집 기록 서비스 FooKet! (MatzipProject)
 
+**FooKet!**은 **Food**와 **Bucket List**를 결합한 이름으로,  
+가고 싶은 맛집을 버킷리스트처럼 담고 방문 후 기록할 수 있다는 의미를 담았습니다.
+
 이 프로젝트는 맛집을 찾고, 담고, 경험하고, 기록할 수 있는 웹 서비스입니다.  
 🦁 멋쟁이사자처럼 14기 백엔드 과제 실습의 일환으로 제작되었습니다.
+
+### Live Demo
+
+🔗 웹사이트 바로가기: [FooKet 바로가기](https://jiwoolee0211.pythonanywhere.com/)
+
+---
+
+### Preview
+
+#### Main Page
+<img src="README_assets/fooket1_.png" alt="FooKet Main Page" width="800">
+
+#### Restaurant List Page
+<img src="README_assets/fooket2.png" alt="FooKet Restaurant List Page" width="800">
+
+#### Trend Page
+<img src="README_assets/fooket3.png" alt="FooKet Trend Page" width="800">
+
+---
 
 ### 주요 내용
 
